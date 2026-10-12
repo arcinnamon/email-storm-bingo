@@ -1,3 +1,5 @@
+import type { PhraseConfig } from "@/types/bingo";
+
 export const FREE_SPACE = "FREE SPACE";
 export const MIN_PHRASES = 24;
 export const MAX_PHRASES = 200;
@@ -52,4 +54,20 @@ export function validatePhrases(input: unknown): string[] {
     seen.add(key);
   }
   return phrases;
+}
+
+/** Versions match PostgreSQL's positive integer range. */
+export function validateVersion(input: unknown): number {
+  if (typeof input !== "number" || !Number.isInteger(input) || input < 1 || input > 2_147_483_647) {
+    throw new PhraseValidationError("Provide a valid positive configuration version.");
+  }
+  return input;
+}
+
+/** Validate API/storage data at runtime and omit all private database metadata. */
+export function validatePhraseConfig(input: unknown): PhraseConfig {
+  if (!input || typeof input !== "object" || !("version" in input) || !("phrases" in input) || !Array.isArray(input.phrases)) {
+    throw new PhraseValidationError("Invalid phrase configuration.");
+  }
+  return { version: validateVersion(input.version), phrases: validatePhrases(input.phrases) };
 }

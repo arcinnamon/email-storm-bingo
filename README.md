@@ -3,10 +3,10 @@
 A bingo game for the next reply-all storm. Built with Next.js App Router, strict
 TypeScript, and Tailwind CSS.
 
-Phase 1 provides the responsive app shell and development/test tooling. Card
-generation, gameplay, Supabase persistence, and admin authentication are planned
-in [implementation.md](implementation.md). The current page is a coming-soon
-screen and does not require credentials or a database.
+Phases 1–3 provide the app shell, tested bingo domain logic, Supabase persistence,
+and the public phrase API. Gameplay and admin authentication follow in
+[docs/implementation.md](docs/implementation.md). The current page is a coming-soon
+screen; `/api/phrases` requires a configured, migrated, seeded database.
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open <http://localhost:3000>. The environment values can stay empty for phase 1.
+Open <http://localhost:3000>. The environment values can stay empty for the shell.
 The app uses system fonts, so builds do not need to download fonts.
 
 ## Commands
@@ -41,6 +41,7 @@ The app uses system fonts, so builds do not need to download fonts.
 | `npm test` | Run Vitest unit and React Testing Library component tests |
 | `npm run test:watch` | Run Vitest in watch mode |
 | `npm run test:e2e` | Run Playwright in desktop and 320px mobile viewports |
+| `npm run seed` | Initialize an empty database with 30 phrases; preserve existing configuration |
 
 Install the browser before the first end-to-end run:
 
@@ -74,14 +75,14 @@ packages.
 
 ## Server configuration
 
-`.env.example` lists the variables reserved for later phases:
+`.env.example` lists the server configuration:
 
 | Variable | Purpose |
 | --- | --- |
 | `SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | Private server-side database credential |
-| `ADMIN_PASSWORD_HASH` | Argon2id hash of the admin password |
-| `ADMIN_SESSION_SECRET` | Independent random secret for signing admin sessions |
+| `ADMIN_PASSWORD_HASH` | Argon2id hash of the admin password (phase 5) |
+| `ADMIN_SESSION_SECRET` | Independent random secret for signing admin sessions (phase 5) |
 
 Keep real values in `.env.local` or the hosting environment. Local environment
 files are ignored; only `.env.example` is committed. Never use `NEXT_PUBLIC_`
@@ -91,13 +92,76 @@ Server features should read configuration through `src/lib/env.ts`, which uses
 values when called, rather than when the shell loads. Do not pass its returned
 secrets to client components or public responses.
 
-Supabase provisioning, seeding, and Vercel deployment are outside phase 1 and
-remain operator tasks.
+Database access uses `getDatabaseEnv()` and does not require admin secrets.
+`src/lib/supabase.ts` creates a server-only service-role client, disables session
+persistence and automatic retries, and applies a ten-second request timeout and
+`no-store` to database fetches.
+
+## Supabase setup and safe seeding
+
+Provision a development Supabase project separately from production. As the
+database owner, apply the SQL files in `supabase/migrations/` in filename order
+using the Supabase SQL editor (or your existing Supabase CLI migration workflow):
+
+1. `202610120001_persistence.sql` creates the singleton configuration, private
+   login-attempt storage, and restricted database functions.
+2. `202610120002_login_attempts_cleanup.sql` enables Supabase's `pg_cron` extension
+   and schedules expired login-attempt cleanup every minute. Verify the job
+   `bingo-purge-expired-login-attempts` appears in the dashboard's Cron jobs.
+
+The tables have row-level security enabled and no public policies. `anon` and
+`authenticated` cannot read or write either table or execute mutation functions.
+Only server-side code uses the service-role credential. Do not add public table
+policies to make the phrase API work; it reads on the server.
+
+Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`, confirm they
+target the intended project, then run:
+
+```sh
+npm run seed
+```
+
+The command validates `data/initial-phrases.json` and inserts version 1 only when
+the singleton does not exist. Repeated or simultaneous runs preserve existing
+phrases, version, and timestamp. It never resets a populated database. An error
+exits nonzero without exposing database details. It uses Next.js environment
+loading rules; exported variables take precedence. For production environment
+file precedence, run `NODE_ENV=production npm run seed`.
+
+`GET /api/phrases` returns `{ "version": 1, "phrases": ["..."] }` with
+`Cache-Control: no-store`. No query parameters or request body are required.
+Missing credentials, an unseeded database, corrupt data, and database failures
+return `503` with an uncached retry message; there are no fallback phrases.
+
+The repository's `update(phrases, expectedVersion)` method validates input and
+uses a single conditional database update to increment the version and set the
+timestamp. Stale writes throw `PhraseConflictError`, ready for the phase 6 admin
+API to map to `409`. `PhraseStorageError` distinguishes unavailable storage,
+uninitialized configuration, and invalid stored data. There is no public write API.
+
+Login-attempt storage holds one HMAC-SHA256 client identifier and a counter capped
+at five per client, with at most a 15-minute expiry. It never stores raw IPs.
+Expired rows are purged within the next minute while Cron is running. Phase 5
+will implement keyed hashing and atomic rate-limit enforcement against this table.
+
+`npm test` runs the core migration against embedded Postgres (PGlite), checking
+persistence, constraints, role privileges, stale writes, seed safety, and expiry
+cleanup. Repository tests use the real Supabase SDK with mocked HTTP responses;
+route tests verify response validation, error handling, and caching headers.
+PGlite serializes queries; the suite does not simulate separate Postgres
+connections or run the hosted PostgREST gateway or `pg_cron` scheduler. Verify
+those integrations against a disposable Supabase project before deployment.
+
+Live Supabase provisioning, migration application, production seeding, and Vercel
+deployment remain operator tasks. See [ADR-001](docs/ADRs/ADR-001.md) for the
+persistence decisions and upstream documentation.
 
 ## Project layout
 
 - `src/app/`: shared layout, global styles, and public page.
-- `src/lib/`: server configuration and future domain modules.
+- `src/lib/`: bingo logic, validation, server configuration, and phrase repository.
+- `supabase/migrations/`: database schema, restricted functions, and expiry cleanup.
+- `data/` and `scripts/seed.ts`: initial phrases and safe initialization command.
 - `tests/`: unit/component tests and setup.
 - `tests/e2e/`: browser smoke tests.
 - `docs/architecture.md`: application design.

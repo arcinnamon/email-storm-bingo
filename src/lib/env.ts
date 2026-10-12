@@ -15,12 +15,18 @@ export type ServerEnv = {
   readonly ADMIN_SESSION_SECRET: string;
 };
 
+export function getDatabaseEnv(): Pick<ServerEnv, "SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY"> {
+  return {
+    SUPABASE_URL: required("SUPABASE_URL"),
+    SUPABASE_SERVICE_ROLE_KEY: required("SUPABASE_SERVICE_ROLE_KEY"),
+  };
+}
+
 // Read lazily so builds and the public shell do not require provisioned services.
 // Call only from server code; never serialize the result into client props.
 export function getServerEnv(): ServerEnv {
   return {
-    SUPABASE_URL: required("SUPABASE_URL"),
-    SUPABASE_SERVICE_ROLE_KEY: required("SUPABASE_SERVICE_ROLE_KEY"),
+    ...getDatabaseEnv(),
     ADMIN_PASSWORD_HASH: required("ADMIN_PASSWORD_HASH"),
     ADMIN_SESSION_SECRET: required("ADMIN_SESSION_SECRET"),
   };
