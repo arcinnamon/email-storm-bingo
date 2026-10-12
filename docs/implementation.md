@@ -23,14 +23,14 @@ This checklist turns [docs/architecture.md](docs/architecture.md) and [docs/test
 
 ## Phase 3: Supabase persistence and public phrase API
 
-- [ ] Add database migrations for a singleton `bingo_config` record containing phrases, version, and update timestamp.
-- [ ] Add a `login_attempts` table or equivalent storage for bounded, expiring login-rate-limit data; minimize retained client-identifying information.
-- [ ] Configure database access so credentials and the service-role client are server-only; prevent public access to private tables.
-- [ ] Implement a server-side phrase repository with explicit storage errors.
-- [ ] Implement atomic, version-checked configuration updates so stale submissions return a conflict and cannot overwrite newer data.
-- [ ] Add approximately 30 initial phrases and an idempotent seed command that initializes an empty database only.
-- [ ] Implement `GET /api/phrases` with the current version and phrases, input/output validation, and `Cache-Control: no-store`.
-- [ ] Test persistence, version increments, stale writes, seed safety, public response shape, and database failures.
+- [x] Add database migrations for a singleton `bingo_config` record containing phrases, version, and update timestamp.
+- [x] Add a `login_attempts` table or equivalent storage for bounded, expiring login-rate-limit data; minimize retained client-identifying information.
+- [x] Configure database access so credentials and the service-role client are server-only; prevent public access to private tables.
+- [x] Implement a server-side phrase repository with explicit storage errors.
+- [x] Implement atomic, version-checked configuration updates so stale submissions return a conflict and cannot overwrite newer data.
+- [x] Add approximately 30 initial phrases and an idempotent seed command that initializes an empty database only.
+- [x] Implement `GET /api/phrases` with the current version and phrases, input/output validation, and `Cache-Control: no-store`.
+- [x] Test persistence, version increments, stale writes, seed safety, public response shape, and database failures.
 
 ## Phase 4: Player gameplay
 

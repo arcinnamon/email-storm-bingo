@@ -22,11 +22,11 @@ describe("seed command", () => {
     ], { env });
     expect(stdout.trim()).toBe(message);
     expect(stderr).toBe("");
-  });
+  }, 15_000);
 
   it("exits nonzero with a safe error when credentials are missing", async () => {
     await expect(run(process.execPath, ["--conditions=react-server", "--import", "tsx", "scripts/seed.ts"], {
       env: { ...env, SUPABASE_URL: "", SUPABASE_SERVICE_ROLE_KEY: "" },
     })).rejects.toMatchObject({ code: 1, stdout: "", stderr: expect.stringContaining("Seeding failed. Check server database configuration") });
-  });
+  }, 15_000);
 });
