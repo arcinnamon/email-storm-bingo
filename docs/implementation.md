@@ -13,13 +13,13 @@ This checklist turns [docs/architecture.md](docs/architecture.md) and [docs/test
 
 ## Phase 2: Bingo domain logic
 
-- [ ] Define shared types for phrase configuration, cards, and winning lines.
-- [ ] Implement phrase normalization and validation: trim surrounding whitespace, ignore blank lines, enforce 24–200 phrases and 1–100 characters per phrase, reject normalized duplicates, and reject the reserved `FREE SPACE` phrase.
-- [ ] Implement pure card generation using Fisher–Yates shuffle without mutating the input list.
-- [ ] Ensure every generated card contains exactly 25 cells, with 24 distinct phrases and `FREE SPACE` fixed at index 12.
-- [ ] Implement square toggling so the free center cannot be unmarked.
-- [ ] Implement detection of all 5 rows, 5 columns, and 2 diagonals; derive wins from the current marks.
-- [ ] Add unit tests for valid/invalid phrase lists, card shape and uniqueness, non-mutation, toggling, each winning direction, multiple simultaneous wins, and breaking a win.
+- [x] Define shared types for phrase configuration, cards, and winning lines.
+- [x] Implement phrase normalization and validation: trim surrounding whitespace, ignore blank lines, enforce 24–200 phrases and 1–100 characters per phrase, reject normalized duplicates, and reject the reserved `FREE SPACE` phrase.
+- [x] Implement pure card generation using Fisher–Yates shuffle without mutating the input list.
+- [x] Ensure every generated card contains exactly 25 cells, with 24 distinct phrases and `FREE SPACE` fixed at index 12.
+- [x] Implement square toggling so the free center cannot be unmarked.
+- [x] Implement detection of all 5 rows, 5 columns, and 2 diagonals; derive wins from the current marks.
+- [x] Add unit tests for valid/invalid phrase lists, card shape and uniqueness, non-mutation, toggling, each winning direction, multiple simultaneous wins, and breaking a win.
 
 ## Phase 3: Supabase persistence and public phrase API
 
