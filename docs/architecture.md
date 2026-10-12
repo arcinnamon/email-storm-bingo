@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a small, public-facing bingo app with a protected admin workflow. Players use a shared 5×5 card and mark squares locally in the browser. The application stores only the shared phrase list in the database; card state and marked cells stay in browser memory and are reset on reload.
+This project is a small, public-facing bingo app with a protected admin workflow. Players use a shared 5×5 card and mark squares locally in the browser. The application stores only the shared phrase list in the database; card state and marked cells stay in browser memory and are reset on reload. Major architectural decisions need to be logged as incremental Architecture Decisions Records (ADRs) in the ADRs subfolder. Those ADRs need to be named and numbered like ADR-001.md, ADR-002.md, etc.
 
 ## Stack
 

@@ -4,12 +4,12 @@ This checklist turns [docs/architecture.md](docs/architecture.md) and [docs/test
 
 ## Phase 1: Project foundation
 
-- [ ] Scaffold the Next.js App Router project with strict TypeScript and Tailwind CSS.
-- [ ] Configure Vitest, React Testing Library, and Playwright; add `dev`, `build`, `lint`, `typecheck`, `test`, and `test:e2e` scripts.
-- [ ] Create the shared app layout, global styles, and responsive page shell.
-- [ ] Add `.env.example`; ensure local environment files remain ignored and server secrets cannot enter client bundles.
-- [ ] Update the README with prerequisites and initial local setup.
-- [ ] Verify the development server starts and the production build succeeds.
+- [x] Scaffold the Next.js App Router project with strict TypeScript and Tailwind CSS.
+- [x] Configure Vitest, React Testing Library, and Playwright; add `dev`, `build`, `lint`, `typecheck`, `test`, and `test:e2e` scripts.
+- [x] Create the shared app layout, global styles, and responsive page shell.
+- [x] Add `.env.example`; ensure local environment files remain ignored and server secrets cannot enter client bundles.
+- [x] Update the README with prerequisites and initial local setup.
+- [x] Verify the development server starts and the production build succeeds.
 
 ## Phase 2: Bingo domain logic
 

@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-canvas: #f7f6f2;
+  --color-ink: #262335;
+  --color-muted: #625e70;
+  --color-line: #e2dfe8;
+  --color-accent: #6242a6;
+  --color-accent-soft: #eee8f8;
+  --font-sans: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-wrap: anywhere;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
