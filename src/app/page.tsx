@@ -115,16 +115,9 @@ export default function Home() {
   const actionLabel = error && !isLoading ? (board ? "Retry" : "Retry") : isRandomizing ? "Refreshing..." : "Randomize";
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 overflow-x-hidden px-4 py-8 sm:px-6 lg:px-8">
-      <header className="max-w-2xl space-y-3">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Email storm bingo</p>
-        <h1 className="text-4xl font-black tracking-tight text-ink sm:text-6xl">
-          Your next reply-all deserves a bingo card.
-        </h1>
-      </header>
-
-      <section className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="w-full max-w-[26rem] rounded-3xl border border-line bg-white p-4 shadow-sm sm:p-6">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 overflow-x-hidden px-4 py-8 sm:px-6 lg:px-8">
+      <section className="flex flex-col gap-6">
+        <div className="w-full rounded-3xl border border-line bg-white p-4 shadow-sm sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium text-muted">Game board</p>
@@ -177,7 +170,7 @@ export default function Home() {
               <div
                 role="grid"
                 aria-label="Bingo board"
-                className="grid w-full max-w-[22rem] grid-cols-5 gap-2"
+                className="grid w-full grid-cols-5 gap-2"
               >
                 {board.cells.map((cell, index) => {
                   const isMarked = board.marked[index];
@@ -192,7 +185,7 @@ export default function Home() {
                       aria-label={`Toggle square ${index + 1}: ${cell}`}
                       aria-pressed={isMarked}
                       onClick={() => { if (!isFreeSpace) toggleCell(index); }}
-                      className={`flex aspect-square min-h-[3.1rem] w-full items-center justify-center rounded-xl border p-1 text-center text-[0.56rem] font-medium transition sm:text-[0.7rem] ${
+                      className={`flex aspect-square w-full items-center justify-center rounded-xl border p-1 text-center text-[0.56rem] font-medium transition sm:text-xs ${
                         isMarked
                           ? isWinning
                             ? "border-accent bg-accent text-white shadow-sm"
@@ -213,7 +206,7 @@ export default function Home() {
           ) : null}
         </div>
 
-        <aside className="w-full max-w-lg rounded-3xl border border-line bg-white p-5 sm:p-6">
+        <aside className="w-full rounded-3xl border border-line bg-white p-5 sm:p-6">
           <h2 className="text-xl font-semibold text-ink">How to play</h2>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             <li>Click any non-free square to mark it.</li>
@@ -242,6 +235,6 @@ export default function Home() {
           Your board is ready to load.
         </div>
       )}
-    </main>
+    </div>
   );
 }

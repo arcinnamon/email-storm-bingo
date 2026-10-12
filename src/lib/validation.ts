@@ -1,6 +1,7 @@
 import type { PhraseConfig } from "@/types/bingo";
 
 export const FREE_SPACE = "FREE SPACE";
+export const FREE_SPACE_LABEL = "Please remove me from this distro list (FREE SPACE)";
 export const MIN_PHRASES = 24;
 export const MAX_PHRASES = 200;
 export const MAX_PHRASE_LENGTH = 100;

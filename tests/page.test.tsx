@@ -30,6 +30,25 @@ describe("Home", () => {
     expect(screen.getByText(/Build a row, column, or diagonal to win/i)).toBeVisible();
   });
 
+  it("places instructions above a full-width board with square cells", async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify(config), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    }));
+
+    render(<Home />);
+
+    const instructions = await screen.findByRole("complementary");
+    const grid = await screen.findByRole("grid", { name: "Bingo board" });
+
+    expect(instructions.compareDocumentPosition(grid) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(grid.closest("section")).toHaveClass("flex-col");
+    expect(grid).toHaveClass("w-full");
+    expect(grid).not.toHaveClass("max-w-[22rem]");
+    expect(screen.getAllByRole("gridcell")[0]).toHaveClass("aspect-square");
+    expect(screen.getAllByRole("gridcell")[0].querySelector("span")).toHaveClass("line-clamp-4");
+  });
+
   it("shows an error with retry when the phrase API fails and recovers after retry", async () => {
     const user = userEvent.setup();
     const fetchMock = vi.mocked(fetch) as ReturnType<typeof vi.fn>;

@@ -18,7 +18,7 @@ describe("card generation", () => {
     const input = Object.freeze(phrases(count));
     const card = generateCard(input);
     expect(card.cells).toHaveLength(25);
-    expect(card.cells[12]).toBe("FREE SPACE");
+    expect(card.cells[12]).toBe("Please remove me from this distro list (FREE SPACE)");
     const selected = card.cells.filter((_, index) => index !== 12);
     expect(new Set(selected).size).toBe(24);
     expect(selected.every((phrase) => input.includes(phrase))).toBe(true);
