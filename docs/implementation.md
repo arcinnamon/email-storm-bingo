@@ -88,7 +88,9 @@ This checklist turns [docs/architecture.md](docs/architecture.md) and [docs/test
 ## Completion checklist
 
 - [ ] All applicable scenarios in [docs/tests.md](docs/tests.md) pass.
-- [ ] No card or player progress is persisted between page loads.
-- [ ] Admin data and endpoints are server-protected; private credentials are absent from client bundles.
+- [ ] No card or player progress is persisted in browser storage or the database; reload resets to a fresh board with only the free center marked.
+- [ ] Shared phrase list updates are versioned, conflict-safe, and used by newly generated cards without mutating cards already open in other browsers.
+- [ ] Protected admin routes and APIs reject unauthenticated requests with `401`, rate-limited failed logins return `429`, and no plaintext admin credentials are stored or logged.
+- [ ] Lint, typecheck, unit/component tests, Playwright smoke tests, and a production build all pass on the supported Node.js version.sisted between page loads.- [ ] Admin data and endpoints are server-protected; private credentials are absent from client bundles.
 - [ ] Lint, typecheck, automated tests, browser smoke tests, and production build pass.
 - [ ] Local setup and deployment instructions are complete and accurate.

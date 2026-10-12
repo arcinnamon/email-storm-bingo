@@ -50,6 +50,7 @@ Recommended table shape:
 - 24-hour session lifetime
 - Multiline phrase editor with one phrase per line
 - Save validation and optimistic conflict handling via `expectedVersion`
+- Pages are explicitly marked `noindex` and omitted from the public navigation
 
 ## Security model
 
