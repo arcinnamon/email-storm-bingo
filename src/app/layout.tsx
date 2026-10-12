@@ -3,8 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Email Storm Bingo",
-  description: "A little bingo for your next big reply-all storm.",
+  title: "Email Storm Bingo"
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

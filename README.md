@@ -41,6 +41,12 @@ The app uses system fonts, so builds do not need to download fonts.
 | `npm test` | Run Vitest unit and React Testing Library component tests |
 | `npm run test:watch` | Run Vitest in watch mode |
 | `npm run test:e2e` | Run Playwright in desktop and 320px mobile viewports |
+| `npm run db:login` | Authenticate the Supabase CLI |
+| `npm run db:link -- --project-ref <ref>` | Link this checkout to a Supabase project |
+| `npm run db:status` | List local and remote migration history |
+| `npm run db:migration:new -- <name>` | Create a timestamped SQL migration |
+| `npm run db:repair -- --status applied <version>` | Record a migration that was already applied outside the CLI |
+| `npm run db:push` | Apply pending migrations to the linked project |
 | `npm run seed` | Initialize an empty database with 30 phrases; preserve existing configuration |
 
 Install the browser before the first end-to-end run:
@@ -99,9 +105,54 @@ persistence and automatic retries, and applies a ten-second request timeout and
 
 ## Supabase setup and safe seeding
 
+The Supabase CLI is installed as a project development dependency and configured
+in `supabase/config.toml`; teammates get the same CLI version from
+`package-lock.json`. From the repository root, authenticate and link this
+checkout to the intended project:
+
+```sh
+npm run db:login
+npm run db:link -- --project-ref your-project-ref
+```
+
+Use the project ref from that project's Supabase dashboard. The link is stored
+in the ignored `supabase/.temp/` directory, not committed to the repository, so
+each developer links their own checkout. Never commit an access token or
+database password.
+
+The migration workflow is:
+
+```sh
+npm run db:status
+npm run db:migration:new -- describe_the_schema_change
+# Edit the newly created SQL file under supabase/migrations/.
+npm run db:status
+npm run db:push
+```
+
+`db:push` applies all unapplied local migrations to the currently linked remote
+project. Review the pending migration list and confirm the linked project before
+running it, especially for production. The existing SQL migrations are already
+in `supabase/migrations/`; no need to create them again. The CLI's automatic SQL
+seed is disabled because this repository initializes phrases through the
+separate, idempotent `npm run seed` command.
+
+If a migration was already successfully run by pasting it into the Dashboard's
+SQL Editor, first check `npm run db:status`. If that migration is not recorded
+remotely, mark that specific version as applied rather than trying to run its
+DDL a second time; for example:
+
+```sh
+npm run db:repair -- --status applied 202610120001
+```
+
+Only do this after verifying that the corresponding SQL completed successfully
+on the linked project. Otherwise, `db:push` should apply the pending migration
+normally.
+
 Provision a development Supabase project separately from production. As the
 database owner, apply the SQL files in `supabase/migrations/` in filename order
-using the Supabase SQL editor (or your existing Supabase CLI migration workflow):
+using the CLI workflow above (or the Supabase SQL editor):
 
 1. `202610120001_persistence.sql` creates the singleton configuration, private
    login-attempt storage, and restricted database functions.
@@ -152,9 +203,10 @@ PGlite serializes queries; the suite does not simulate separate Postgres
 connections or run the hosted PostgREST gateway or `pg_cron` scheduler. Verify
 those integrations against a disposable Supabase project before deployment.
 
-Live Supabase provisioning, migration application, production seeding, and Vercel
-deployment remain operator tasks. See [ADR-001](docs/ADRs/ADR-001.md) for the
-persistence decisions and upstream documentation.
+Live Supabase provisioning, migration application, and production seeding remain
+operator tasks. Pushing to `main` automatically deploys to the Vercel instance.
+See [ADR-001](docs/ADRs/ADR-001.md) for the persistence decisions and upstream
+documentation.
 
 ## Project layout
 

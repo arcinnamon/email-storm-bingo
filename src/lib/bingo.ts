@@ -1,5 +1,5 @@
 import type { BingoCard, MarkedSquares, WinningLine } from "@/types/bingo";
-import { FREE_SPACE, validatePhrases } from "@/lib/validation";
+import { FREE_SPACE_LABEL, validatePhrases } from "@/lib/validation";
 
 export const CELL_COUNT = 25;
 export const FREE_SPACE_INDEX = 12;
@@ -36,7 +36,7 @@ export function generateCard(
   }
 
   const cells = shuffled.slice(0, CELL_COUNT - 1);
-  cells.splice(FREE_SPACE_INDEX, 0, FREE_SPACE);
+  cells.splice(FREE_SPACE_INDEX, 0, FREE_SPACE_LABEL);
   return {
     cells,
     marked: Array.from({ length: CELL_COUNT }, (_, index) => index === FREE_SPACE_INDEX),
