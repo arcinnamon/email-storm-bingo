@@ -13,10 +13,6 @@ export default defineConfig({
     include: ["tests/**/*.test.{ts,tsx}"],
     clearMocks: true,
     pool: "threads",
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    maxWorkers: 1,
   },
 });
