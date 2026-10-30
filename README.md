@@ -12,7 +12,11 @@ Stack: Next.js on Vercel, Supabase for the database and auth, Claude Code GitHub
 ## Setup
 
 1. Create the repo from the step-zero template, then set the Actions permissions and run Pipeline setup to create labels.
-2. Add CLAUDE_CODE_OAUTH_TOKEN, then the Vercel secrets and project.
+2. Add these repository secrets under Actions:
+  1. CLAUDE_CODE_OAUTH_TOKEN
+  2. VERCEL_TOKEN
+  3. VERCEL_ORG_ID
+  4. VERCEL_PROJECT_ID
 3. Create separate staging and production Supabase projects now, since this project needs a database from the first real idea.
 4. Add the production environment with yourself as required reviewer, and leave APPROVER_PAT unset given the admin-auth work coming.
 
