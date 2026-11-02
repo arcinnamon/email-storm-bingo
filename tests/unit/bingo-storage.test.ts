@@ -42,6 +42,12 @@ describe("bingo storage", () => {
     cells[0] = "Not a real phrase";
     expect(loadGame(fakeStorage(JSON.stringify({ ...g, cells })))).toBeNull();
   });
+  it("returns null for an old save whose center is 'Free space'", () => {
+    const g = sampleGame();
+    const cells = [...g.cells];
+    cells[FREE_INDEX] = "Free space";
+    expect(loadGame(fakeStorage(JSON.stringify({ ...g, cells })))).toBeNull();
+  });
   it("returns null when the free space is damaged", () => {
     const g = sampleGame();
     const marked = [...g.marked];
