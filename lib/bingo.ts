@@ -1,7 +1,7 @@
 export const SIZE = 5;
 export const CELLS = SIZE * SIZE;
 export const FREE_INDEX = 12;
-export const FREE_LABEL = "Free space";
+export const FREE_LABEL = "Please remove me from this distribution list";
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 

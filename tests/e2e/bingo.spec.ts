@@ -29,8 +29,22 @@ test("shows 25 squares and toggles one", async ({ page }) => {
 test("free space cannot be unmarked", async ({ page }) => {
   await page.goto("/");
   const free = page.locator(".bingo-cell").nth(12);
+  await expect(free).toHaveText("Please remove me from this distribution list");
   await free.click();
   await expect(free).toHaveAttribute("aria-pressed", "true");
+});
+
+test("long free label fits at phone width", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/");
+  const free = page.locator(".bingo-cell").nth(12);
+  await expect(free).toHaveText("Please remove me from this distribution list");
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+  const clipped = await free.evaluate((el) => el.scrollHeight > el.clientHeight);
+  expect(clipped).toBe(false);
 });
 
 test("shows Bingo! when a line is completed", async ({ page }) => {

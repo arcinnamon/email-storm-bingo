@@ -36,7 +36,9 @@ describe("buildCard", () => {
   it("gives 25 cells, 24 distinct phrases, free in the center", () => {
     const card = buildCard(PHRASES);
     expect(card).toHaveLength(25);
+    expect(FREE_LABEL).toBe("Please remove me from this distribution list");
     expect(card[FREE_INDEX]).toBe(FREE_LABEL);
+    expect(card.filter((c) => c === FREE_LABEL)).toHaveLength(1);
     const others = card.filter((_, i) => i !== FREE_INDEX);
     expect(new Set(others).size).toBe(24);
     expect(others.every((p) => PHRASES.includes(p))).toBe(true);
