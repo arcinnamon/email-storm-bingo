@@ -56,7 +56,6 @@ export function BingoCard() {
             data-winning={winning.has(i) || undefined}
             onClick={() => toggle(i)}
           >
-            {winning.has(i) ? <span aria-hidden="true">✓ </span> : null}
             {phrase}
           </button>
         ))}
