@@ -20,12 +20,20 @@ test("cells and button use the Winamp palette", async ({ page }) => {
   await expect(cells.nth(0)).toHaveCSS("background-color", rgb("#0a0a0a"));
   await expect(cells.nth(0)).toHaveCSS("color", rgb("#00ff3c"));
   const size = await cells.nth(0).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  expect(size).toBeGreaterThanOrEqual(12);
+  expect(size).toBeGreaterThanOrEqual(9);
+  if (await page.evaluate(() => innerWidth > 480)) expect(size).toBeGreaterThanOrEqual(14);
   await cells.nth(0).click();
   await expect(cells.nth(0)).toHaveAttribute("aria-pressed", "true");
   await expect(cells.nth(0)).toHaveCSS("background-color", rgb("#00ff3c"));
   await expect(cells.nth(0)).toHaveCSS("color", rgb("#0a0a0a"));
   await expect(page.getByRole("button", { name: "New card" })).toHaveCSS("background-color", rgb("#c8c8d0"));
+});
+
+test("body uses Inter, not a pixel or monospace font", async ({ page }) => {
+  await page.goto("/");
+  const family = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
+  expect(family).toMatch(/inter/i);
+  expect(family).not.toMatch(/vt323|monospace/i);
 });
 
 test("fits 375px and shows a yellow focus ring", async ({ page }) => {

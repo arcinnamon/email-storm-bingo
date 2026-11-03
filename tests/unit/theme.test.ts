@@ -32,13 +32,21 @@ describe("theme", () => {
     expect(() => token(name)).not.toThrow();
   });
 
-  it("uses the pixel font variable with a monospace fallback", () => {
-    expect(css).toMatch(/--font-pixel:[^;]*var\(--font-vt323\)[^;]*monospace/);
+  it("uses Inter through a neutral font variable with a sans-serif fallback", () => {
+    expect(css).toMatch(/--font-sans:[^;]*var\(--font-inter\)[^;]*sans-serif/);
+    expect(readFileSync("app/layout.tsx", "utf8")).toMatch(/Inter\(/);
+  });
+
+  it("has no pixel font left in app/", () => {
+    for (const f of ["app/layout.tsx", "app/globals.css"]) {
+      expect(readFileSync(f, "utf8")).not.toMatch(/vt323|--font-pixel/i);
+    }
   });
 
   it.each([
     ["green", "black"],
     ["black", "green"],
+    ["white", "blue"],
     ["yellow", "blue"],
     ["black", "silver"],
   ])("%s on %s is at least 4.5:1", (fg, bg) => {
