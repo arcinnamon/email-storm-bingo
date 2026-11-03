@@ -21,7 +21,7 @@ None.
 - [x] T4: Retune sizes for Inter: body about 1rem, h1, banner, title bar (drop wide letter-spacing if it hurts), and cell text with a 14px floor on desktop and phones. Colors unchanged. Verify: `winamp.spec.ts` font-size checks updated and passing, cell computed font-size >= 14px.
 - [x] T5: Update `.bingo-cell` and the max-width 480px media query so text never grows the cell (keep `aspect-ratio: 1`, `overflow: hidden`, `hyphens`, `overflow-wrap`). Verify: `bingo-square.spec.ts` passes at 320, 360 and desktop widths.
 - [x] T6: Make the no-clipping test in `bingo-square.spec.ts` cover every phrase in the pool at 320 and 360px (`scrollWidth <= clientWidth`, `scrollHeight <= clientHeight`, 1px tolerance). Verify: `npm run test:e2e -- bingo-square`.
-- [ ] T7: Shorten any phrase in `lib/phrases.ts` that fails T6 at the 14px floor (keep count and uniqueness). Verify: `tests/unit/phrases.test.ts` and T6 pass.
+- [x] T7: Shorten any phrase in `lib/phrases.ts` that fails T6 at the 14px floor (keep count and uniqueness). Verify: `tests/unit/phrases.test.ts` and T6 pass.
 - [x] T8: Add a contrast unit test in `tests/unit/theme.test.ts` computing WCAG ratios for the text/background pairs in use (green on black, black on green, white on blue, yellow on blue, black on silver), each at least 4.5:1. Verify: `npm run test`.
 - [x] T9: Run `bash .github/scripts/verify.sh` and fix lint, typecheck, unit, and build failures. Verify: all checks green.
 

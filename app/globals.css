@@ -131,7 +131,7 @@ a {
 
 @media (max-width: 480px) {
   .bingo-cell {
-    font-size: clamp(9px, 2.7vw, 12px);
+    font-size: 12px;
     line-height: 1.05;
     padding: 0.05rem;
   }
