@@ -112,6 +112,9 @@ a {
 .bingo-cell {
   aspect-ratio: 1;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  hyphens: auto;
   padding: 0.15rem;
   font: inherit;
   font-size: clamp(0.75rem, 3.2vw, 1.15rem);
@@ -123,6 +126,14 @@ a {
   border-color: var(--silver-dark) var(--silver) var(--silver) var(--silver-dark);
   border-radius: 0;
   cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .bingo-cell {
+    font-size: clamp(10px, 3vw, 13px);
+    line-height: 1;
+    padding: 0.05rem;
+  }
 }
 
 .bingo-cell[aria-pressed="true"] {

@@ -51,6 +51,8 @@ export function BingoCard() {
             key={i}
             type="button"
             className="bingo-cell"
+            title={phrase}
+            aria-label={phrase}
             aria-pressed={game.marked[i]}
             aria-disabled={i === FREE_INDEX || undefined}
             data-winning={winning.has(i) || undefined}
