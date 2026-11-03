@@ -9,14 +9,15 @@ const SIZES = [
   { name: "desktop", width: 1280, height: 800 },
 ];
 
-// Two decks that together cover every phrase in the pool.
+// Two decks of 24 phrases that together cover every phrase in the pool.
 function decks(): string[][] {
-  const per = FREE_INDEX * 2; // 24 phrases per card
-  const first = PHRASES.slice(0, per);
-  const rest = PHRASES.slice(per);
-  const second = [...rest, ...PHRASES.filter((p) => !rest.includes(p))].slice(0, per);
-  return [first, second];
+  const per = FREE_INDEX * 2;
+  return [PHRASES.slice(0, per), PHRASES.slice(-per)];
 }
+
+test("the test decks cover every phrase in the pool", () => {
+  expect(new Set(decks().flat())).toEqual(new Set(PHRASES));
+});
 
 async function loadDeck(page: Page, phrases: string[]) {
   const cells = [...phrases.slice(0, FREE_INDEX), FREE_LABEL, ...phrases.slice(FREE_INDEX)];
@@ -77,5 +78,7 @@ test("each space has the full phrase as its accessible name", async ({ page }) =
     expect(p.label).toBe(p.text);
     expect(p.title).toBe(p.text);
   }
-  await expect(page.getByRole("button", { name: pairs[0].text ?? "", exact: true })).toBeVisible();
+  for (const p of pairs) {
+    await expect(page.getByRole("button", { name: p.text ?? "", exact: true })).toBeVisible();
+  }
 });
