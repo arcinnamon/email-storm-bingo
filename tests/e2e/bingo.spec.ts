@@ -57,6 +57,15 @@ test("shows Bingo! when a line is completed", async ({ page }) => {
   await expect(banner).toBeVisible();
 });
 
+test("winning line shows no check marks", async ({ page }) => {
+  await seedCard(page);
+  const cells = page.locator(".bingo-cell");
+  for (const i of [10, 11, 13, 14]) await cells.nth(i).click();
+  await expect(page.getByRole("status").getByText("Bingo!")).toBeVisible();
+  await expect(page.locator(".bingo-cell[data-winning]")).toHaveCount(5);
+  for (const text of await cells.allTextContents()) expect(text).not.toContain("✓");
+});
+
 test("New card asks first, then resets", async ({ page }) => {
   await page.goto("/");
   const cells = page.locator(".bingo-cell");
