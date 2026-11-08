@@ -5,6 +5,7 @@ import { STORAGE_KEY } from "../../lib/bingo-storage";
 
 const SIZES = [
   { name: "360px phone", width: 360, height: 740 },
+  { name: "375px phone", width: 375, height: 812 },
   { name: "320px phone", width: 320, height: 640 },
   { name: "desktop", width: 1280, height: 800 },
 ];
@@ -50,7 +51,7 @@ for (const size of SIZES) {
   });
 }
 
-for (const size of SIZES.slice(0, 2)) {
+for (const size of SIZES.filter((s) => s.width < 1000)) {
   test("no phrase is clipped at " + size.name, async ({ browser }) => {
     for (const deck of decks()) {
       const context = await browser.newContext({ viewport: { width: size.width, height: size.height } });
@@ -66,6 +67,19 @@ for (const size of SIZES.slice(0, 2)) {
     }
   });
 }
+
+test("bingo spaces use Arial while the title keeps its font", async ({ page }) => {
+  await page.goto("/");
+  const cells = page.locator(".bingo-cell");
+  await expect(cells).toHaveCount(25);
+  const families = await cells.evaluateAll((els) => els.map((el) => getComputedStyle(el).fontFamily));
+  for (const f of families) {
+    expect(f.toLowerCase().startsWith("arial")).toBe(true);
+    expect(f).not.toContain("VT323");
+  }
+  const title = await page.locator("h1").first().evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(title.toLowerCase()).not.toMatch(/^arial/);
+});
 
 test("each space has the full phrase as its accessible name", async ({ page }) => {
   await page.goto("/");
