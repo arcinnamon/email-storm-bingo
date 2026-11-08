@@ -36,6 +36,12 @@ describe("theme", () => {
     expect(css).toMatch(/--font-pixel:[^;]*var\(--font-vt323\)[^;]*monospace/);
   });
 
+  it("sets bingo cells in the Arial stack, not VT323", () => {
+    const rule = css.match(/\n\.bingo-cell \{[^}]*\}/)?.[0] ?? "";
+    expect(rule).toMatch(/font-family:\s*Arial,/);
+    expect(rule).not.toMatch(/vt323|font-pixel|font:\s*inherit/i);
+  });
+
   it.each([
     ["green", "black"],
     ["black", "green"],
